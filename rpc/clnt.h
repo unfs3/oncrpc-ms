@@ -339,7 +339,7 @@ extern struct rpc_createerr rpc_createerr;
 #ifdef __BORLANDC__
 extern __declspec(dllimport) struct rpc_createerr rpc_createerr;
 #else
-_declspec(dllimport) struct rpc_createerr rpc_createerr;
+__declspec(dllimport) struct rpc_createerr rpc_createerr;
 #endif
 #endif
 #else

@@ -172,7 +172,7 @@ extern struct opaque_auth _null_auth;
 #ifdef __BORLANDC__
 extern __declspec(dllimport) struct opaque_auth _null_auth;
 #else
-_declspec(dllimport) struct opaque_auth _null_auth;
+__declspec(dllimport) struct opaque_auth _null_auth;
 #endif
 #endif
 #else
