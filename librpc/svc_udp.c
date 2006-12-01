@@ -93,6 +93,9 @@ struct svcudp_data {
 };
 #define	su_data(xprt)	((struct svcudp_data *)(xprt->xp_p2))
 
+int cache_get(SVCXPRT *xprt, struct rpc_msg *msg, char **replyp, u_long *replylenp);
+void cache_set(SVCXPRT *xprt, u_long replylen);
+
 /*
  * Usage:
  *	xprt = svcudp_create(sock);
