@@ -50,24 +50,24 @@ static char sccsid[] = "@(#)get_myaddress.c 1.4 87/08/11 Copyr 1984 Sun Micro";
 
 #ifdef WIN32
 #include <rpc/rpc.h>
-#include <rpc/pmap_pro.h>
 #include <stdio.h>
 
 #define MAX_NAME_LEN	255
 #else
 #include <rpc/types.h>
-#include <rpc/pmap_prot.h>
+
 #include <sys/socket.h>
 #include <stdio.h>
 #include <net/if.h>
 #include <sys/ioctl.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
+#endif
+#include <rpc/pmap_prot.h>
 
 /* 
  * don't use gethostbyname, which would invoke yellow pages
  */
-#endif
 
 get_myaddress(addr)
 	struct sockaddr_in *addr;

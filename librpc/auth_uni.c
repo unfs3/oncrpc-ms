@@ -58,15 +58,12 @@ static char sccsid[] = "@(#)auth_unix.c 1.19 87/08/11 Copyr 1984 Sun Micro";
 
 #ifdef WIN32
 #include <rpc/rpc.h>
-#include <rpc/xdr.h>
-#include <rpc/auth.h>
-#include <rpc/auth_uni.h>
 #else
 #include <rpc/types.h>
+#endif
 #include <rpc/xdr.h>
 #include <rpc/auth.h>
 #include <rpc/auth_unix.h>
-#endif
 
 /*
  * Unix authenticator operations vector

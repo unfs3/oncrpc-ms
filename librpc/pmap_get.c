@@ -50,8 +50,8 @@ static char sccsid[] = "@(#)pmap_getport.c 1.9 87/08/11 Copyr 1984 Sun Micro";
  */
 
 #include <rpc/rpc.h>
-#include <rpc/pmap_pro.h>
-#include <rpc/pmap_cln.h>
+#include <rpc/pmap_prot.h>
+#include <rpc/pmap_clnt.h>
 
 static struct timeval timeout = { 5, 0 };
 static struct timeval tottimeout = { 60, 0 };

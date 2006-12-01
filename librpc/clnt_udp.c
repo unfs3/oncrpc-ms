@@ -52,16 +52,16 @@ static char sccsid[] = "@(#)clnt_udp.c 1.39 87/08/11 Copyr 1984 Sun Micro";
 #include <rpc/rpc.h>
 #ifdef WIN32
 #include <errno.h>
-#include <rpc/pmap_cln.h>
 #else
 #include <sys/socket.h>
 #include <sys/ioctl.h>
 #include <netdb.h>
 #include <errno.h>
-#include <rpc/pmap_clnt.h>
 
 extern int errno;
 #endif
+
+#include <rpc/pmap_clnt.h>
 
 /*
  * UDP bases client side rpc operations

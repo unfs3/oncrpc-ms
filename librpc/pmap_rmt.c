@@ -51,16 +51,10 @@ static char sccsid[] = "@(#)pmap_rmt.c 1.21 87/08/27 Copyr 1984 Sun Micro";
 
 #include <rpc/rpc.h>
 #ifdef WIN32
-#include <rpc/pmap_pro.h>
-#include <rpc/pmap_cln.h>
-#include <rpc/pmap_rmt.h>
 #include <stdio.h>
 #include <errno.h>
 #define MAX_BROADCAST_SIZE 1400
 #else
-#include <rpc/pmap_prot.h>
-#include <rpc/pmap_clnt.h>
-#include <rpc/pmap_rmt.h>
 #include <sys/socket.h>
 #include <stdio.h>
 #include <errno.h>
@@ -71,6 +65,9 @@ static char sccsid[] = "@(#)pmap_rmt.c 1.21 87/08/27 Copyr 1984 Sun Micro";
 
 extern int errno;
 #endif
+#include <rpc/pmap_prot.h>
+#include <rpc/pmap_clnt.h>
+#include <rpc/pmap_rmt.h>
 static struct timeval timeout = { 3, 0 };
 
 

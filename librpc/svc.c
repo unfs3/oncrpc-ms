@@ -54,15 +54,14 @@ static char sccsid[] = "@(#)svc.c 1.41 87/10/13 Copyr 1984 Sun Micro";
 
 #ifdef WIN32
 #include <rpc/rpc.h>
-#include <rpc/pmap_cln.h>
 #include <stdio.h>
 #else
 #include <sys/errno.h>
 #include <rpc/rpc.h>
-#include <rpc/pmap_clnt.h>
 
 extern int errno;
 #endif
+#include <rpc/pmap_clnt.h>
 
 #ifdef FD_SETSIZE
 static SVCXPRT **xports;
