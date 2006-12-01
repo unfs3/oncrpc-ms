@@ -93,11 +93,8 @@ extern int xdr_opaque_auth(DOTS);
 
 /* semi-private protocol headers */
 #include <rpc/rpc_msg.h>	/* protocol for rpc messages */
-#ifdef WIN32
-#include <rpc/auth_uni.h>	/* protocol for unix style cred */
-#else
 #include <rpc/auth_unix.h>	/* protocol for unix style cred */
-#endif
+
 /*
  *  Uncomment-out the next line if you are building the rpc library with
  *  DES Authentication (see the README file in the secure_rpc/ directory).
