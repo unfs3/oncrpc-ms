@@ -49,15 +49,12 @@
 #define __RPC_HEADER__
 
 #ifdef WIN32
-#define FD_SETSIZE	128
-
 #include <stdlib.h>
 #include <winsock.h>
 #include <rpc/types.h>		/* some typedefs */
 #include <process.h>
 
 #define WSAerrno (WSAGetLastError())
-#define gettimeofday(tv,tz) ((tv)->tv_sec = time(0), (tv)->tv_usec = 0)
 
 #ifdef __cplusplus
 extern "C" {

@@ -53,6 +53,7 @@ static char sccsid[] = "@(#)pmap_rmt.c 1.21 87/08/27 Copyr 1984 Sun Micro";
 #ifdef WIN32
 #include <stdio.h>
 #include <errno.h>
+#include <sys/time.h>
 #define MAX_BROADCAST_SIZE 1400
 #else
 #include <sys/socket.h>
@@ -60,11 +61,15 @@ static char sccsid[] = "@(#)pmap_rmt.c 1.21 87/08/27 Copyr 1984 Sun Micro";
 #include <errno.h>
 #include <net/if.h>
 #include <sys/ioctl.h>
+#include <sys/time.h>
 #include <arpa/inet.h>
 #define MAX_BROADCAST_SIZE 1400
 
 extern int errno;
 #endif
+
+#include "gettimeofday.h"
+
 #include <rpc/pmap_prot.h>
 #include <rpc/pmap_clnt.h>
 #include <rpc/pmap_rmt.h>

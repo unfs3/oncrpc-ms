@@ -22,7 +22,9 @@ AC_SYS_LARGEFILE
 if test x$ac_cv_c_compiler_gnu = xyes ; then
     CFLAGS="$CFLAGS -W -Wall"
 fi
-    
+
+AC_CHECK_FUNCS([gettimeofday])
+
 AC_SUBST(SHLIB_VERSION_ARG)
 AC_SUBST(SHARED_VERSION_INFO)
 
