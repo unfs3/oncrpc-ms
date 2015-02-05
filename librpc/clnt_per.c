@@ -260,8 +260,8 @@ char *
 clnt_spcreateerror(s)
 	char *s;
 {
-	extern int sys_nerr;
 #ifndef WIN32
+	extern int sys_nerr;
 	extern char *sys_errlist[];
 #endif
 	char *str = _buf();
