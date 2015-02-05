@@ -136,6 +136,12 @@ typedef struct rec_strm {
 } RECSTREAM;
 
 
+static bool_t flush_out(rstrm, eor);
+static bool_t get_input_bytes(rstrm, addr, len);
+static bool_t set_input_fragment(rstrm);
+static bool_t skip_input_bytes(rstrm, cnt);
+
+
 /*
  * Create an xdr handle for xdrrec
  * xdrrec_create fills in xdrs.  Sendsize and recvsize are

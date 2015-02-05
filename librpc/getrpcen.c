@@ -68,7 +68,7 @@ struct rpcdata {
 	struct	rpcent rpc;
 	char	line[BUFSIZ+1];
 	char	*domain;
-} *rpcdata, *_rpcdata();
+} *rpcdata;
 
 static	struct rpcent *interpret();
 struct	hostent *gethostent();
