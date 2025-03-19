@@ -26,44 +26,6 @@ But first a message from our lawers:
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-What's new? (in descending order)
-
-- v1.14: Support for automatic installation via InstallShield Express
-  2.04 or later. This includes automatic installation of even updates
-  of the ONC/RPC NT portmap service! Just insert the installation
-  floppy, run the setup program and select the Custom mode, so you can
-  install the NT portmap service. That's it -- the portmapper is
-  installed or updated automatically.
-
-  The magic is done behind the scenes by a DLL accompanying the
-  portmap.exe service executable. The DLL is named portmap.srg and
-  contains the necessary logic for self-registration (it misuses the
-  OLE server registration mechanism).
-
-  You can also register or deregister the portmapper from the command
-  line: just start the portmapper executable with either the command
-  line argument "/registerservice" or "/unregisterservice".
-
-  Also added version information to the oncrpc.dll and the portmap.exe
-  binaries.
-
-- v1.12: The sources have been adapted to Borland C++ 5.0. The
-  binaries included in this packages have been compiled using
-  BC++. For the people insisting on using MS Visual C+, we're
-  providing the necessary import library as "bin\oncrpcms.lib". The
-  software is still compilable using VC+ 4.2. To compile the package
-  with Borland C++, use the makefile.bc makefiles or the makebc.bat
-  script in the root directory of this package.
-
-- v1.12: Corrected rpc\svc.h, so the fdset used in a RPC server is
-  exported properly:
-    _declspec(dllimport) fd_set svc_fdset
-  Changed rpc\clnt.h accordingly to export a structure necessary to
-  check for client errors:
-    struct rpc_createerr rpc_createerr;
-  Also updated the def files accordingly, like oncrpc.def, so data
-  structures are properly exported.
-
 But now enjoy!
 
 Your ACPLT/KS Team.
