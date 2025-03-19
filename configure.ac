@@ -1,6 +1,6 @@
 AC_PREREQ(2.59)
 
-AC_INIT([oncrpc-ms],[1.14])
+AC_INIT([oncrpc-ms],[1.15])
 AC_CONFIG_SRCDIR([librpc/svc.c])
 AC_CANONICAL_TARGET([])
 
