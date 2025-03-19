@@ -1,0 +1,58 @@
+ONC/RPC for Microsoft Windows
+=============================
+
+ oncrpc-ms is yet another port of Suns "Open Network Computing Remote
+ Procedure Call" (ONC/RPC) for Microsoft Windows. This port is based on
+ the ACPLT implementation, which is based on Martin Gergeleit's package,
+ which is based on Suns "RPCSRC 4.0". This project, though, features
+ public repository access and MinGW support. Support for Visual C++ .NET
+ 2003 is also planned. The goal for this project is to become the de
+ facto standard ONC RPC implementation for Microsoft Windows. Please
+ note that ONC RPC does not support IPv6. If you need this, take a look
+ at the libtirpc project (a Windows port is yet to be done).
+
+Here's a small FAQ:
+
+Q: There are already several ONC/RPC implementations for Windows
+   available. Why yet another fork?
+
+A: All implementations that I've found are poorly maintained. The thing
+   that disturbes me most is the lack of version control. For me, it's
+   just not sufficient to put up a onrpc.zip file on the web. I want bug
+   tracker, version control, mailing etc.
+
+Installation
+------------
+
+When choosing the "Custom" setup type, only select the "Portmap NT
+Service" for installation when installing on a Windows NT machine.
+Although this package can also be selected on Windows 95/98/01 systems,
+the installation will then fail.
+
+The "Typical" setup type installs the binary files, the ONC/RPC DLL and
+the header files, so you can also develop ONC/RPC applications.
+
+If you only want to install the ONC/RPC DLL then choose the "Compact"
+setup type.
+
+To install the source code of the ONC/RPC package, you need to choose
+the "Custom" setup type and then manually select the source code
+package.
+
+Copyright notices
+-----------------
+
+This project is made available under the GNU Lesser General Public
+License. The code it is based on carried the following copyright notice:
+
+THIS SOFTWARE IS PROVIDED BY THE CHAIR OF PROCESS CONTROL ENGINEERING
+``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE CHAIR OF
+PROCESS CONTROL ENGINEERING BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
