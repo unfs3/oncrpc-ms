@@ -32,13 +32,13 @@ dnl The following line causes the libtool distributed with the source
 dnl to be replaced if the build system has a more recent version.
 AC_SUBST(LIBTOOL_DEPS)
 
-AC_CONFIG_FILES([ \
-    Makefile \
+AC_CONFIG_FILES([
+    Makefile
     librpc/Makefile])
-dnl AC_CONFIG_FILES([ \
-dnl     rpcgen/Makefile \
-dnl     service/Makefile \
-dnl     rpcinfo/Makefile \
+dnl AC_CONFIG_FILES([
+dnl     rpcgen/Makefile
+dnl     service/Makefile
+dnl     rpcinfo/Makefile
 dnl     test/Makefile])
 
 AC_OUTPUT
