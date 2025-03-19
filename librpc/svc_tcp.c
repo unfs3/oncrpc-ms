@@ -137,7 +137,7 @@ struct tcp_conn {  /* kept in xprt->xp_p1 */
  * If the socket, sock is not bound to a port then svctcp_create
  * binds it to an arbitrary port.  The routine then starts a tcp
  * listener on the socket's associated port.  In any (successful) case,
- * xprt->xp_sock is the registered socket number and xprt->xp_port is the
+ * xprt->xp_fd is the registered socket number and xprt->xp_port is the
  * associated port number.
  *
  * Since tcp streams do buffered io similar to stdio, the caller can specify
@@ -209,7 +209,7 @@ svctcp_create(sock, sendsize, recvsize)
 	xprt->xp_verf = _null_auth;
 	xprt->xp_ops = &svctcp_rendezvous_op;
 	xprt->xp_port = ntohs(addr.sin_port);
-	xprt->xp_sock = sock;
+	xprt->xp_fd = sock;
 	xprt_register(xprt);
 	return (xprt);
 }
@@ -266,7 +266,7 @@ makefd_xprt(fd, sendsize, recvsize)
 	xprt->xp_addrlen = 0;
 	xprt->xp_ops = &svctcp_op;  /* truely deals with calls */
 	xprt->xp_port = 0;  /* this is a connection, not a rendezvouser */
-	xprt->xp_sock = fd;
+	xprt->xp_fd = fd;
 	xprt_register(xprt);
     done:
 	return (xprt);
@@ -284,7 +284,7 @@ rendezvous_request(xprt)
 	r = (struct tcp_rendezvous *)xprt->xp_p1;
     again:
 	len = sizeof(struct sockaddr_in);
-	if ((sock = accept(xprt->xp_sock, (struct sockaddr *)&addr,
+	if ((sock = accept(xprt->xp_fd, (struct sockaddr *)&addr,
 	    &len)) < 0) {
 #ifdef WIN32
 		if (WSAerrno == WSAEINTR)
@@ -318,9 +318,9 @@ svctcp_destroy(xprt)
 
 	xprt_unregister(xprt);
 #ifdef WIN32
-	(void)closesocket(xprt->xp_sock);
+	(void)closesocket(xprt->xp_fd);
 #else
-	(void)close(xprt->xp_sock);
+	(void)close(xprt->xp_fd);
 #endif
 	if (xprt->xp_port != 0) {
 		/* a rendezvouser socket */
@@ -350,7 +350,7 @@ readtcp(xprt, buf, len)
 	caddr_t buf;
 	register int len;
 {
-	register int sock = xprt->xp_sock;
+	register int sock = xprt->xp_fd;
 #ifdef FD_SETSIZE
 	fd_set mask;
 	fd_set readfds;
@@ -409,9 +409,9 @@ writetcp(xprt, buf, len)
 
 	for (cnt = len; cnt > 0; cnt -= i, buf += i) {
 #ifdef WIN32
-		if ((i = send(xprt->xp_sock, buf, cnt, 0)) < 0) {
+		if ((i = send(xprt->xp_fd, buf, cnt, 0)) < 0) {
 #else
-		if ((i = write(xprt->xp_sock, buf, cnt)) < 0) {
+		if ((i = write(xprt->xp_fd, buf, cnt)) < 0) {
 #endif
 			((struct tcp_conn *)(xprt->xp_p1))->strm_stat =
 			    XPRT_DIED;

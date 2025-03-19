@@ -88,7 +88,8 @@ enum xprt_stat {
  * Server side transport handle
  */
 typedef struct {
-	int		xp_sock;
+	int		xp_fd;
+#define xp_sock		xp_fd
 	u_short		xp_port;	 /* associated port number */
 	struct xp_ops {
 	    bool_t	(*xp_recv)(DOTS);	 /* receive incomming requests */

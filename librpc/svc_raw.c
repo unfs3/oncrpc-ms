@@ -90,7 +90,7 @@ svcraw_create()
 		if (srp == 0)
 			return (0);
 	}
-	srp->server.xp_sock = 0;
+	srp->server.xp_fd = 0;
 	srp->server.xp_port = 0;
 	srp->server.xp_ops = &server_ops;
 	srp->server.xp_verf.oa_base = srp->verf_body;

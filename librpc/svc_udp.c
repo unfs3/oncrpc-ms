@@ -104,7 +104,7 @@ static void cache_set(SVCXPRT *xprt, u_long replylen);
  * If sock<0 then a socket is created, else sock is used.
  * If the socket, sock is not bound to a port then svcudp_create
  * binds it to an arbitrary port.  In any (successful) case,
- * xprt->xp_sock is the registered socket number and xprt->xp_port is the
+ * xprt->xp_fd is the registered socket number and xprt->xp_port is the
  * associated port number.
  * Once *xprt is initialized, it is registered as a transporter;
  * see (svc.h, xprt_register).
@@ -182,7 +182,7 @@ svcudp_bufcreate(sock, sendsz, recvsz)
 	xprt->xp_verf.oa_base = su->su_verfbody;
 	xprt->xp_ops = &svcudp_op;
 	xprt->xp_port = ntohs(addr.sin_port);
-	xprt->xp_sock = sock;
+	xprt->xp_fd = sock;
 	xprt_register(xprt);
 	return (xprt);
 }
@@ -216,7 +216,7 @@ svcudp_recv(xprt, msg)
 
     again:
 	xprt->xp_addrlen = sizeof(struct sockaddr_in);
-	rlen = recvfrom(xprt->xp_sock, rpc_buffer(xprt), (int) su->su_iosz,
+	rlen = recvfrom(xprt->xp_fd, rpc_buffer(xprt), (int) su->su_iosz,
 	    0, (struct sockaddr *)&(xprt->xp_raddr), &(xprt->xp_addrlen));
 #ifdef WIN32
 	if (rlen == -1 && WSAerrno == WSAEINTR)
@@ -234,9 +234,9 @@ svcudp_recv(xprt, msg)
 	if (su->su_cache != NULL) {
 		if (cache_get(xprt, msg, &reply, &replylen)) {
 #ifdef WIN32
-			  sendto(xprt->xp_sock, reply, (int) replylen, 0,
+			  sendto(xprt->xp_fd, reply, (int) replylen, 0,
 #else
-			(void) sendto(xprt->xp_sock, reply, (int) replylen, 0,
+			(void) sendto(xprt->xp_fd, reply, (int) replylen, 0,
 #endif
 			  (struct sockaddr *) &xprt->xp_raddr, xprt->xp_addrlen);
 			return (TRUE);
@@ -260,7 +260,7 @@ svcudp_reply(xprt, msg)
 	msg->rm_xid = su->su_xid;
 	if (xdr_replymsg(xdrs, msg)) {
 		slen = (int)XDR_GETPOS(xdrs);
-		if (sendto(xprt->xp_sock, rpc_buffer(xprt), slen, 0,
+		if (sendto(xprt->xp_fd, rpc_buffer(xprt), slen, 0,
 		    (struct sockaddr *)&(xprt->xp_raddr), xprt->xp_addrlen)
 		    == slen) {
 			stat = TRUE;
@@ -302,9 +302,9 @@ svcudp_destroy(xprt)
 
 	xprt_unregister(xprt);
 #ifdef WIN32
-	(void)closesocket(xprt->xp_sock);
+	(void)closesocket(xprt->xp_fd);
 #else
-	(void)close(xprt->xp_sock);
+	(void)close(xprt->xp_fd);
 #endif
 	XDR_DESTROY(&(su->su_xdrs));
 	mem_free(rpc_buffer(xprt), su->su_iosz);

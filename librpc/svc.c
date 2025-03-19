@@ -101,7 +101,7 @@ void
 xprt_register(xprt)
 	SVCXPRT *xprt;
 {
-	register int sock = xprt->xp_sock;
+	register int sock = xprt->xp_fd;
 
 #ifdef FD_SETSIZE
 	if (xports == NULL) {
@@ -151,7 +151,7 @@ void
 xprt_unregister(xprt) 
 	SVCXPRT *xprt;
 { 
-	register int sock = xprt->xp_sock;
+	register int sock = xprt->xp_fd;
 
 #ifdef FD_SETSIZE
 #ifdef WIN32
