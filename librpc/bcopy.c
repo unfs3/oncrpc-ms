@@ -22,29 +22,29 @@
 #include <rpc/bcopy.h>
 
 /*
- *  bcopy(char *s1, char *s2, int len) --
+ *  bcopy(void *s1, void *s2, int len) --
  *      Copies len bytes from s1 to s2
  */
 void
 bcopy(s1, s2, len)
-	char *s1, *s2;
+	void *s1, *s2;
 	int len;
 {
 	for(; len > 0; len--)
-		*s2++ = *s1++;
+		*(char*)s2++ = *(char*)s1++;
 }
 
 /*
- *  bzero(char *s, int len) --
+ *  bzero(void *s, int len) --
  *      Places len zero byes in s
  */
 void
 bzero(s, len)
-	char *s;
+	void *s;
 	int len;
 {
 	for(; len > 0; len--)
-		*s++ = (char) 0;
+		*(char*)s++ = (char) 0;
 }
 
 /*
@@ -55,11 +55,11 @@ bzero(s, len)
 */
 int
 bcmp(s1, s2, len)
-	char *s1, *s2;
+	void *s1, *s2;
 	int len;
 {
 	for(; len > 0; len--, s1++, s2++)
-		if (*s1 != *s2)
+		if (*(char*)s1 != *(char*)s2)
 			return 1;
 	return 0;
 }

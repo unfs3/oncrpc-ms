@@ -290,7 +290,7 @@ clnt_broadcast(prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
 		goto done_broad;
 	}
 #ifdef SO_BROADCAST
-	if (setsockopt(sock, SOL_SOCKET, SO_BROADCAST, &on, sizeof (on)) < 0) {
+	if (setsockopt(sock, SOL_SOCKET, SO_BROADCAST, (void*)&on, sizeof (on)) < 0) {
 		perror("Cannot set socket option SO_BROADCAST");
 		stat = RPC_CANTSEND;
 		goto done_broad;
@@ -358,11 +358,11 @@ clnt_broadcast(prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
                 msg.acpted_rply.ar_results.proc = xdr_rmtcallres;
 		readfds = mask;
 #ifdef WIN32
-		switch (select(0 /* unused in winsock */, &readfds, (int *)NULL,
+		switch (select(0 /* unused in winsock */, &readfds, NULL,
 #else
-		switch (select(_rpc_dtablesize(), &readfds, (int *)NULL, 
+		switch (select(_rpc_dtablesize(), &readfds, NULL,
 #endif
-			       (int *)NULL, &t)) {
+			       NULL, &t)) {
 		case 0:  /* timed out */
 			stat = RPC_TIMEDOUT;
 			continue;
