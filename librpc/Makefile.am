@@ -9,6 +9,7 @@ INCLUDES = -I$(top_srcdir)
 liboncrpc_la_LDFLAGS = -no-undefined -version-info @SHARED_VERSION_INFO@ @SHLIB_VERSION_ARG@ -lws2_32
 liboncrpc_la_SOURCES = \
     clnt_raw.c \
+    gettimeofday.h \
     xdr.c \
     clnt_tcp.c \
     clnt_udp.c \
