@@ -67,7 +67,9 @@ static void universal();
 static SVCXPRT *transp;
 struct proglst *pl;
 
+int
 registerrpc(prognum, versnum, procnum, progname, inproc, outproc)
+	int prognum, versnum, procnum;
 	char *(*progname)();
 	xdrproc_t inproc, outproc;
 {

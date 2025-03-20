@@ -64,8 +64,10 @@ static struct callrpc_private {
 	char	*oldhost;
 } *callrpc_private;
 
+int
 callrpc(host, prognum, versnum, procnum, inproc, in, outproc, out)
 	char *host;
+	int prognum, versnum, procnum;
 	xdrproc_t inproc, outproc;
 	char *in, *out;
 {

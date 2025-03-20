@@ -147,6 +147,7 @@ getrpcbyname(name)
 	return (NULL);
 }
 
+static void
 setrpcent(f)
 	int f;
 {
@@ -164,6 +165,7 @@ setrpcent(f)
 	d->stayopen |= f;
 }
 
+void
 endrpcent()
 {
 	register struct rpcdata *d = _rpcdata();
@@ -201,13 +203,14 @@ getrpcent()
 static struct rpcent *
 interpret(val, len)
 	char *val;
+	int len;
 {
 	register struct rpcdata *d = _rpcdata();
 	char *p;
 	register char *cp, **q;
 
 	if (d == 0)
-		return;
+		return NULL;
 	strncpy(d->line, val, len);
 	p = d->line;
 	d->line[len] = '\n';

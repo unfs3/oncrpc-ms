@@ -136,10 +136,10 @@ typedef struct rec_strm {
 } RECSTREAM;
 
 
-static bool_t flush_out(rstrm, eor);
-static bool_t get_input_bytes(rstrm, addr, len);
-static bool_t set_input_fragment(rstrm);
-static bool_t skip_input_bytes(rstrm, cnt);
+static bool_t flush_out(RECSTREAM *rstrm, bool_t eor);
+static bool_t get_input_bytes(RECSTREAM *rstrm, caddr_t addr, int len);
+static bool_t set_input_fragment(RECSTREAM *rstrm);
+static bool_t skip_input_bytes(RECSTREAM *rstrm, long cnt);
 
 
 /*
