@@ -27,10 +27,12 @@ liboncrpc_la_SOURCES = \
     auth_uni.c \
     authunix.c \
     bindresv.c \
+    bindresv.h \
     clnt_gen.c \
     clnt_per.c \
     clnt_sim.c \
     get_myad.c \
+    get_myad.h \
     getrpcen.c \
     getrpcpo.c \
     pmap_cln.c \

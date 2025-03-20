@@ -53,6 +53,8 @@ static char sccsid[] = "@(#)pmap_clnt.c 1.37 87/08/11 Copyr 1984 Sun Micro";
 #include <rpc/pmap_prot.h>
 #include <rpc/pmap_clnt.h>
 
+#include "get_myad.h"
+
 static struct timeval timeout = { 5, 0 };
 static struct timeval tottimeout = { 60, 0 };
 

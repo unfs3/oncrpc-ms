@@ -19,6 +19,8 @@
 
 #include <stdio.h>
 
+#include <rpc/bcopy.h>
+
 /*
  *  bcopy(char *s1, char *s2, int len) --
  *      Copies len bytes from s1 to s2

@@ -52,6 +52,8 @@ static char sccsid[] = "@(#)xdr_reference.c 1.11 87/08/11 SMI";
  */
 
 #include <stdio.h>
+
+#include <rpc/rpc.h>
 #include <rpc/types.h>
 #include <rpc/xdr.h>
 

@@ -51,6 +51,7 @@ static char sccsid[] = "@(#)clnt_udp.c 1.39 87/08/11 Copyr 1984 Sun Micro";
 #include <stdio.h>
 #include <sys/time.h>
 
+#include "bindresv.h"
 #include "gettimeofday.h"
 
 #include <rpc/rpc.h>

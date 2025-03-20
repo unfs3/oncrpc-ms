@@ -70,6 +70,9 @@ struct rpcdata {
 	char	*domain;
 } *rpcdata;
 
+static void setrpcent(int f);
+static void endrpcent();
+
 static	struct rpcent *interpret();
 struct	hostent *gethostent();
 #ifdef WIN32

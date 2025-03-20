@@ -64,11 +64,13 @@ static char sccsid[] = "@(#)clnt_tcp.c 1.37 87/10/05 Copyr 1984 Sun Micro";
 #include <stdio.h>
 #include <sys/time.h>
 
+#include "bindresv.h"
 #include "gettimeofday.h"
 
 #include <rpc/rpc.h>
 #ifdef WIN32
 #include <errno.h>
+#include <winsock2.h>
 #else
 #include <sys/socket.h>
 #include <netdb.h>

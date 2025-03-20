@@ -59,6 +59,9 @@ static char sccsid[] = "@(#)svc_tcp.c 1.21 87/08/11 Copyr 1984 Sun Micro";
 #include <sys/socket.h>
 #endif
 #include <errno.h>
+
+#include "bindresv.h"
+
 #ifdef WIN32
 int xabort();
 #else
