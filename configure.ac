@@ -34,10 +34,11 @@ AC_SUBST(LIBTOOL_DEPS)
 
 AC_CONFIG_FILES([ \
     Makefile \
-    librpc/Makefile \
-    rpcgen/Makefile \
-    service/Makefile \
-    rpcinfo/Makefile \
-    test/Makefile])
+    librpc/Makefile])
+dnl AC_CONFIG_FILES([ \
+dnl     rpcgen/Makefile \
+dnl     service/Makefile \
+dnl     rpcinfo/Makefile \
+dnl     test/Makefile])
 
 AC_OUTPUT
