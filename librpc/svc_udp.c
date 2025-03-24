@@ -180,6 +180,12 @@ svcudp_bufcreate(sock, sendsz, recvsz)
 	su->su_cache = NULL;
 	xprt->xp_p2 = (caddr_t)su;
 	xprt->xp_verf.oa_base = su->su_verfbody;
+	memset(&(xprt->xp_ltaddr), 0, sizeof(xprt->xp_ltaddr));
+	memset(&(xprt->xp_rtaddr), 0, sizeof(xprt->xp_rtaddr));
+	xprt->xp_ltaddr.maxlen = sizeof(struct sockaddr_storage);
+	xprt->xp_ltaddr.len = xprt->xp_ltaddr.maxlen;
+	xprt->xp_ltaddr.buf = mem_alloc(xprt->xp_ltaddr.maxlen);
+	getsockname(xprt->xp_fd, xprt->xp_ltaddr.buf, &xprt->xp_ltaddr.len);
 	xprt->xp_ops = &svcudp_op;
 	xprt->xp_port = ntohs(addr.sin_port);
 	xprt->xp_fd = sock;
@@ -226,6 +232,11 @@ svcudp_recv(xprt, msg)
 		goto again;
 	if (rlen < 4*sizeof(u_long))
 		return (FALSE);
+	mem_free(xprt->xp_rtaddr.buf, xprt->xp_rtaddr.maxlen);
+	xprt->xp_rtaddr.maxlen = xprt->xp_addrlen;
+	xprt->xp_rtaddr.len = xprt->xp_addrlen;
+	xprt->xp_rtaddr.buf = mem_alloc(xprt->xp_addrlen);
+	memcpy(xprt->xp_rtaddr.buf, &xprt->xp_raddr, xprt->xp_addrlen);
 	xdrs->x_op = XDR_DECODE;
 	XDR_SETPOS(xdrs, 0);
 	if (! xdr_callmsg(xdrs, msg))
@@ -307,6 +318,8 @@ svcudp_destroy(xprt)
 	(void)close(xprt->xp_fd);
 #endif
 	XDR_DESTROY(&(su->su_xdrs));
+	mem_free(xprt->xp_ltaddr.buf, xprt->xp_ltaddr.maxlen);
+	mem_free(xprt->xp_rtaddr.buf, xprt->xp_rtaddr.maxlen);
 	mem_free(rpc_buffer(xprt), su->su_iosz);
 	mem_free((caddr_t)su, sizeof(struct svcudp_data));
 	mem_free((caddr_t)xprt, sizeof(SVCXPRT));

@@ -84,4 +84,10 @@ typedef unsigned int u_int;
 typedef unsigned long u_long;
 typedef unsigned short u_short;
 
+struct netbuf {
+	unsigned int maxlen;
+	unsigned int len;
+	void *buf;
+};
+
 #endif /* ndef __TYPES_RPC_HEADER__ */

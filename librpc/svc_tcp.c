@@ -264,6 +264,8 @@ makefd_xprt(fd, sendsize, recvsize)
 	xprt->xp_p1 = (caddr_t)cd;
 	xprt->xp_verf.oa_base = cd->verf_body;
 	xprt->xp_addrlen = 0;
+	memset(&(xprt->xp_ltaddr), 0, sizeof(xprt->xp_ltaddr));
+	memset(&(xprt->xp_rtaddr), 0, sizeof(xprt->xp_rtaddr));
 	xprt->xp_ops = &svctcp_op;  /* truely deals with calls */
 	xprt->xp_port = 0;  /* this is a connection, not a rendezvouser */
 	xprt->xp_fd = fd;
@@ -300,6 +302,16 @@ rendezvous_request(xprt)
 	xprt = makefd_xprt(sock, r->sendsize, r->recvsize);
 	xprt->xp_raddr = addr;
 	xprt->xp_addrlen = len;
+	mem_free(xprt->xp_ltaddr.buf, xprt->xp_ltaddr.maxlen);
+	mem_free(xprt->xp_rtaddr.buf, xprt->xp_rtaddr.maxlen);
+	xprt->xp_ltaddr.maxlen = sizeof(struct sockaddr_storage);
+	xprt->xp_ltaddr.len = xprt->xp_ltaddr.maxlen;
+	xprt->xp_ltaddr.buf = mem_alloc(xprt->xp_ltaddr.maxlen);
+	getsockname(xprt->xp_fd, xprt->xp_ltaddr.buf, &xprt->xp_ltaddr.len);
+	xprt->xp_rtaddr.maxlen = sizeof(struct sockaddr_storage);
+	xprt->xp_rtaddr.len = xprt->xp_rtaddr.maxlen;
+	xprt->xp_rtaddr.buf = mem_alloc(xprt->xp_rtaddr.maxlen);
+	getpeername(xprt->xp_fd, xprt->xp_rtaddr.buf, &xprt->xp_rtaddr.len);
 	return (FALSE); /* there is never an rpc msg to be processed */
 }
 
@@ -329,6 +341,8 @@ svctcp_destroy(xprt)
 		/* an actual connection socket */
 		XDR_DESTROY(&(cd->xdrs));
 	}
+	mem_free(xprt->xp_ltaddr.buf, xprt->xp_ltaddr.maxlen);
+	mem_free(xprt->xp_rtaddr.buf, xprt->xp_rtaddr.maxlen);
 	mem_free((caddr_t)cd, sizeof(struct tcp_conn));
 	mem_free((caddr_t)xprt, sizeof(SVCXPRT));
 }

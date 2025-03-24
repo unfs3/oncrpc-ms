@@ -101,6 +101,8 @@ typedef struct {
 	} *xp_ops;
 	int		xp_addrlen;	 /* length of remote address */
 	struct sockaddr_in xp_raddr;	 /* remote address */
+	struct netbuf	xp_ltaddr;	 /* local transport address */
+	struct netbuf	xp_rtaddr;	 /* remote transport address */
 	struct opaque_auth xp_verf;	 /* raw response verifier */
 	caddr_t		xp_p1;		 /* private */
 	caddr_t		xp_p2;		 /* private */
@@ -110,6 +112,7 @@ typedef struct {
  *  Approved way of getting address of caller
  */
 #define svc_getcaller(x) (&(x)->xp_raddr)
+#define svc_getrpccaller(x) (&(x)->xp_rtaddr)
 
 /*
  * Operations defined on an SVCXPRT handle
