@@ -52,7 +52,9 @@ static char sccsid[] = "@(#)xdr.c 1.35 87/08/12";
  * xdr.
  */
 
+#include <assert.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -275,6 +277,112 @@ xdr_u_char(xdrs, cp)
 	}
 	*cp = u;
 	return (TRUE);
+}
+
+/*
+ * XDR 32-bit integers
+ */
+bool_t
+xdr_int32_t(xdrs, i32p)
+	register XDR *xdrs;
+	int32_t *i32p;
+{
+	assert(sizeof(int32_t) == sizeof(int));
+	return (xdr_int(xdrs, (int *)i32p));
+}
+
+/*
+ * XDR unsigned 32-bit integers
+ */
+bool_t
+xdr_uint32_t(xdrs, u32p)
+	register XDR *xdrs;
+	int32_t *u32p;
+{
+	assert(sizeof(uint32_t) == sizeof(u_int));
+	return (xdr_u_int(xdrs, (u_int *)u32p));
+}
+
+/*
+ * XDR 64-bit integers
+ */
+bool_t
+xdr_int64_t(xdrs, i64p)
+	register XDR *xdrs;
+	int64_t *i64p;
+{
+	unsigned char buf[8];
+
+	if (xdrs->x_op == XDR_ENCODE) {
+		buf[0] = (*i64p >> 56) & 0xff;
+		buf[1] = (*i64p >> 48) & 0xff;
+		buf[2] = (*i64p >> 40) & 0xff;
+		buf[3] = (*i64p >> 32) & 0xff;
+		buf[4] = (*i64p >> 24) & 0xff;
+		buf[5] = (*i64p >> 16) & 0xff;
+		buf[6] = (*i64p >> 8) & 0xff;
+		buf[7] = (*i64p) & 0xff;
+		return (XDR_PUTBYTES(xdrs, buf, 8));
+	}
+	if (xdrs->x_op == XDR_DECODE) {
+		if (!XDR_GETBYTES(xdrs, buf, 8)) {
+			return (FALSE);
+		}
+		*i64p = 0;
+		*i64p |= (int64_t)buf[0] << 56;
+		*i64p |= (int64_t)buf[1] << 48;
+		*i64p |= (int64_t)buf[2] << 40;
+		*i64p |= (int64_t)buf[3] << 32;
+		*i64p |= (int64_t)buf[4] << 24;
+		*i64p |= (int64_t)buf[5] << 16;
+		*i64p |= (int64_t)buf[6] << 8;
+		*i64p |= (int64_t)buf[7];
+		return (TRUE);
+	}
+	if (xdrs->x_op == XDR_FREE)
+		return (TRUE);
+	return (FALSE);
+}
+
+/*
+ * XDR unsigned 64-bit integers
+ */
+bool_t
+xdr_uint64_t(xdrs, u64p)
+	register XDR *xdrs;
+	uint64_t *u64p;
+{
+	unsigned char buf[8];
+
+	if (xdrs->x_op == XDR_ENCODE) {
+		buf[0] = (*u64p >> 56) & 0xff;
+		buf[1] = (*u64p >> 48) & 0xff;
+		buf[2] = (*u64p >> 40) & 0xff;
+		buf[3] = (*u64p >> 32) & 0xff;
+		buf[4] = (*u64p >> 24) & 0xff;
+		buf[5] = (*u64p >> 16) & 0xff;
+		buf[6] = (*u64p >> 8) & 0xff;
+		buf[7] = (*u64p) & 0xff;
+		return (XDR_PUTBYTES(xdrs, buf, 8));
+	}
+	if (xdrs->x_op == XDR_DECODE) {
+		if (!XDR_GETBYTES(xdrs, buf, 8)) {
+			return (FALSE);
+		}
+		*u64p = 0;
+		*u64p |= (uint64_t)buf[0] << 56;
+		*u64p |= (uint64_t)buf[1] << 48;
+		*u64p |= (uint64_t)buf[2] << 40;
+		*u64p |= (uint64_t)buf[3] << 32;
+		*u64p |= (uint64_t)buf[4] << 24;
+		*u64p |= (uint64_t)buf[5] << 16;
+		*u64p |= (uint64_t)buf[6] << 8;
+		*u64p |= (uint64_t)buf[7];
+		return (TRUE);
+	}
+	if (xdrs->x_op == XDR_FREE)
+		return (TRUE);
+	return (FALSE);
 }
 
 /*
