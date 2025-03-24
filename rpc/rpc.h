@@ -99,6 +99,7 @@ extern int xdr_opaque_auth(DOTS);
 /*#include <rpc/auth_des.h> */	/* protocol for des style cred */
 
 /* Server side only remote procedure callee */
+#include <rpc/netconfig.h>
 #include <rpc/svc.h>		/* service manager and multiplexer */
 #include <rpc/svc_auth.h>	/* service side authenticator */
 

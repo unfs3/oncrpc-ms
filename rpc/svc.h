@@ -179,6 +179,16 @@ struct svc_req {
 extern bool_t	svc_register(DOTS);
 
 /*
+ * svc_reg(xprt, prog, vers, dispatch, nconf)
+ *	SVCXPRT *xprt;
+ *	rpcprog_t prog;
+ *	rpcvers_t vers;
+ *	void (*dispatch)();
+ *	struct netconfig *nconf;
+ */
+extern bool_t svc_reg(DOTS);
+
+/*
  * Service un-registration
  *
  * svc_unregister(prog, vers)
@@ -186,6 +196,13 @@ extern bool_t	svc_register(DOTS);
  *	u_long vers;
  */
 extern void	svc_unregister(DOTS);
+
+ /*
+  * svc_unreg(prog, vers)
+  *	rpcprog_t prog;
+  *	rpcvers_t vers;
+  */
+extern void svc_unreg(DOTS);
 
 /*
  * Transport registration.

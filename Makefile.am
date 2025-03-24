@@ -9,6 +9,7 @@ nobase_include_HEADERS = \
     rpc/auth_unix.h \
     rpc/bcopy.h \
     rpc/clnt.h \
+    rpc/netconfig.h \
     rpc/netdb.h \
     rpc/pmap_clnt.h \
     rpc/pmap_prot.h \

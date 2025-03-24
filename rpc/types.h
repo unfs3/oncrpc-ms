@@ -84,6 +84,9 @@ typedef unsigned int u_int;
 typedef unsigned long u_long;
 typedef unsigned short u_short;
 
+typedef u_long rpcprog_t;
+typedef u_long rpcvers_t;
+
 struct netbuf {
 	unsigned int maxlen;
 	unsigned int len;

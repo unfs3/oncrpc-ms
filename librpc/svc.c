@@ -213,6 +213,18 @@ pmap_it:
 	return (TRUE);
 }
 
+bool_t
+svc_reg(xprt, prog, vers, dispatch, nconf)
+	SVCXPRT *xprt;
+	rpcprog_t prog;
+	rpcvers_t vers;
+	void (*dispatch)();
+	struct netconfig *nconf;
+{
+	return svc_register(xprt, prog, vers, dispatch,
+		nconf ? nconf->protocol : 0);
+}
+
 /*
  * Remove a service program from the callout list.
  */
@@ -235,6 +247,14 @@ svc_unregister(prog, vers)
 	mem_free((char *) s, (u_int) sizeof(struct svc_callout));
 	/* now unregister the information with the local binder service */
 	(void)pmap_unset(prog, vers);
+}
+
+void
+svc_unreg(prog, vers)
+	rpcprog_t prog;
+	rpcvers_t vers;
+{
+	svc_unregister(prog, vers);
 }
 
 /*

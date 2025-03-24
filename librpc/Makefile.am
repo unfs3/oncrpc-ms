@@ -13,6 +13,7 @@ liboncrpc_la_SOURCES = \
     xdr.c \
     clnt_tcp.c \
     clnt_udp.c \
+    netconfig.c \
     pmap_rmt.c \
     rpc_prot.c \
     svc_autu.c \
