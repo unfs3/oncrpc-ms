@@ -173,15 +173,33 @@ svctcp_create(sock, sendsize, recvsize)
 		addr.sin_port = 0;
 		(void)bind(sock, (struct sockaddr *)&addr, len);
 	}
-	if ((getsockname(sock, (struct sockaddr *)&addr, &len) != 0)  ||
-	    (listen(sock, 2) != 0)) {
-		perror("svctcp_.c - cannot getsockname or listen");
+	xprt = svc_vc_create(sock, sendsize, recvsize);
+	if (xprt == NULL) {
 		if (madesock)
 #ifdef WIN32
 		       (void)closesocket(sock);
 #else
 		       (void)close(sock);
 #endif
+		return ((SVCXPRT *)NULL);
+	}
+	return (xprt);
+}
+
+SVCXPRT *
+svc_vc_create(sock, sendsize, recvsize)
+	register int sock;
+	u_int sendsize;
+	u_int recvsize;
+{
+	register SVCXPRT *xprt;
+	register struct tcp_rendezvous *r;
+	struct sockaddr_in addr;
+	int len = sizeof(struct sockaddr_in);
+
+	if ((getsockname(sock, (struct sockaddr *)&addr, &len) != 0)  ||
+	    (listen(sock, 2) != 0)) {
+		perror("svctcp_.c - cannot getsockname or listen");
 		return ((SVCXPRT *)NULL);
 	}
 	r = (struct tcp_rendezvous *)mem_alloc(sizeof(*r));

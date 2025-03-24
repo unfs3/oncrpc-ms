@@ -117,7 +117,6 @@ svcudp_bufcreate(sock, sendsz, recvsz)
 {
 	bool_t madesock = FALSE;
 	register SVCXPRT *xprt;
-	register struct svcudp_data *su;
 	struct sockaddr_in addr;
 	int len = sizeof(struct sockaddr_in);
 
@@ -138,14 +137,39 @@ svcudp_bufcreate(sock, sendsz, recvsz)
 		addr.sin_port = 0;
 		(void)bind(sock, (struct sockaddr *)&addr, len);
 	}
-	if (getsockname(sock, (struct sockaddr *)&addr, &len) != 0) {
-		perror("svcudp_create - cannot getsockname");
+	xprt = svc_dg_create(sock, sendsz, recvsz);
+	if (xprt == NULL) {
 		if (madesock)
 #ifdef WIN32
 			(void)closesocket(sock);
 #else
 			(void)close(sock);
 #endif
+		return ((SVCXPRT *)NULL);
+	}
+	return (xprt);
+}
+
+SVCXPRT *
+svcudp_create(sock)
+	int sock;
+{
+
+	return(svcudp_bufcreate(sock, UDPMSGSIZE, UDPMSGSIZE));
+}
+
+SVCXPRT *
+svc_dg_create(sock, sendsz, recvsz)
+	register int sock;
+	u_int sendsz, recvsz;
+{
+	register SVCXPRT *xprt;
+	register struct svcudp_data *su;
+	struct sockaddr_in addr;
+	int len = sizeof(struct sockaddr_in);
+
+	if (getsockname(sock, (struct sockaddr *)&addr, &len) != 0) {
+		perror("svcudp_create - cannot getsockname");
 		return ((SVCXPRT *)NULL);
 	}
 	xprt = (SVCXPRT *)mem_alloc(sizeof(SVCXPRT));
@@ -191,14 +215,6 @@ svcudp_bufcreate(sock, sendsz, recvsz)
 	xprt->xp_fd = sock;
 	xprt_register(xprt);
 	return (xprt);
-}
-
-SVCXPRT *
-svcudp_create(sock)
-	int sock;
-{
-
-	return(svcudp_bufcreate(sock, UDPMSGSIZE, UDPMSGSIZE));
 }
 
 static enum xprt_stat

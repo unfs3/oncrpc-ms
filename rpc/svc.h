@@ -321,11 +321,13 @@ extern SVCXPRT *svcraw_create(DOTS);
  */
 extern SVCXPRT *svcudp_create(DOTS);
 extern SVCXPRT *svcudp_bufcreate(DOTS);
+extern SVCXPRT *svc_dg_create(DOTS);
 
 /*
  * Tcp based rpc.
  */
 extern SVCXPRT *svctcp_create(DOTS);
+extern SVCXPRT *svc_vc_create(DOTS);
 
 #ifdef __cplusplus
 };
