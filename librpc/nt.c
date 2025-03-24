@@ -9,7 +9,7 @@
 
 #include <rpc/rpc.h>
 #include <stdio.h>
-#include <winsock.h>
+#include <winsock2.h>
 
 WSADATA WSAData;
 

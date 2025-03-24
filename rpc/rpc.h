@@ -50,7 +50,7 @@
 
 #ifdef WIN32
 #include <stdlib.h>
-#include <winsock.h>
+#include <winsock2.h>
 #include <rpc/types.h>		/* some typedefs */
 #include <process.h>
 
