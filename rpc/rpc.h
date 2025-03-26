@@ -51,6 +51,7 @@
 #ifdef WIN32
 #include <stdlib.h>
 #include <winsock2.h>
+#include <ws2tcpip.h>
 #include <rpc/types.h>		/* some typedefs */
 #include <process.h>
 

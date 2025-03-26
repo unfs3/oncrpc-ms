@@ -165,8 +165,8 @@ svc_dg_create(sock, sendsz, recvsz)
 {
 	register SVCXPRT *xprt;
 	register struct svcudp_data *su;
-	struct sockaddr_in addr;
-	int len = sizeof(struct sockaddr_in);
+	struct sockaddr_storage addr;
+	int len = sizeof(struct sockaddr_storage);
 
 	if (getsockname(sock, (struct sockaddr *)&addr, &len) != 0) {
 		perror("svcudp_create - cannot getsockname");
@@ -211,7 +211,12 @@ svc_dg_create(sock, sendsz, recvsz)
 	xprt->xp_ltaddr.buf = mem_alloc(xprt->xp_ltaddr.maxlen);
 	getsockname(xprt->xp_fd, xprt->xp_ltaddr.buf, &xprt->xp_ltaddr.len);
 	xprt->xp_ops = &svcudp_op;
-	xprt->xp_port = ntohs(addr.sin_port);
+	if (addr.ss_family == AF_INET)
+		xprt->xp_port = ntohs(((struct sockaddr_in *)&addr)->sin_port);
+	else if (addr.ss_family == AF_INET6)
+		xprt->xp_port = ntohs(((struct sockaddr_in6 *)&addr)->sin6_port);
+	else
+		xprt->xp_port = 0;
 	xprt->xp_fd = sock;
 	xprt_register(xprt);
 	return (xprt);
@@ -237,7 +242,7 @@ svcudp_recv(xprt, msg)
 	u_long replylen;
 
     again:
-	xprt->xp_addrlen = sizeof(struct sockaddr_in);
+	xprt->xp_addrlen = sizeof(struct sockaddr_storage);
 	rlen = recvfrom(xprt->xp_fd, rpc_buffer(xprt), (int) su->su_iosz,
 	    0, (struct sockaddr *)&(xprt->xp_raddr), &(xprt->xp_addrlen));
 #ifdef WIN32
@@ -378,7 +383,7 @@ struct cache_node {
 	u_long cache_proc;
 	u_long cache_vers;
 	u_long cache_prog;
-	struct sockaddr_in cache_addr;
+	struct sockaddr_storage cache_addr;
 	/*
 	 * The cached reply and length
 	 */
@@ -403,7 +408,7 @@ struct udp_cache {
 	u_long uc_prog;		/* saved program number */
 	u_long uc_vers;		/* saved version number */
 	u_long uc_proc;		/* saved procedure number */
-	struct sockaddr_in uc_addr; /* saved caller's address */
+	struct sockaddr_storage uc_addr; /* saved caller's address */
 };
 
 

@@ -100,7 +100,7 @@ typedef struct {
 	    void	(*xp_destroy)(DOTS); /* destroy this struct */
 	} *xp_ops;
 	int		xp_addrlen;	 /* length of remote address */
-	struct sockaddr_in xp_raddr;	 /* remote address */
+	struct sockaddr_storage xp_raddr;	 /* remote address */
 	struct netbuf	xp_ltaddr;	 /* local transport address */
 	struct netbuf	xp_rtaddr;	 /* remote transport address */
 	struct opaque_auth xp_verf;	 /* raw response verifier */

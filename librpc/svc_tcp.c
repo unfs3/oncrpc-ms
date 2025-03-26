@@ -194,8 +194,8 @@ svc_vc_create(sock, sendsize, recvsize)
 {
 	register SVCXPRT *xprt;
 	register struct tcp_rendezvous *r;
-	struct sockaddr_in addr;
-	int len = sizeof(struct sockaddr_in);
+	struct sockaddr_storage addr;
+	int len = sizeof(struct sockaddr_storage);
 
 	if ((getsockname(sock, (struct sockaddr *)&addr, &len) != 0)  ||
 	    (listen(sock, 2) != 0)) {
@@ -226,7 +226,12 @@ svc_vc_create(sock, sendsize, recvsize)
 	xprt->xp_p1 = (caddr_t)r;
 	xprt->xp_verf = _null_auth;
 	xprt->xp_ops = &svctcp_rendezvous_op;
-	xprt->xp_port = ntohs(addr.sin_port);
+	if (addr.ss_family == AF_INET)
+		xprt->xp_port = ntohs(((struct sockaddr_in *)&addr)->sin_port);
+	else if (addr.ss_family == AF_INET6)
+		xprt->xp_port = ntohs(((struct sockaddr_in6 *)&addr)->sin6_port);
+	else
+		xprt->xp_port = 0;
 	xprt->xp_fd = sock;
 	xprt_register(xprt);
 	return (xprt);
@@ -298,12 +303,12 @@ rendezvous_request(xprt)
 {
 	int sock;
 	struct tcp_rendezvous *r;
-	struct sockaddr_in addr;
+	struct sockaddr_storage addr;
 	int len;
 
 	r = (struct tcp_rendezvous *)xprt->xp_p1;
     again:
-	len = sizeof(struct sockaddr_in);
+	len = sizeof(struct sockaddr_storage);
 	if ((sock = accept(xprt->xp_fd, (struct sockaddr *)&addr,
 	    &len)) < 0) {
 #ifdef WIN32
