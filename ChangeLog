@@ -1,3 +1,8 @@
+- v1.16: Compatibility fixes for modern compilers.
+
+  Some first steps to be compatible with the modern TI-RPC API,
+  including some steps towards IPv6 compatibility.
+
 - v1.15: General improved compatiblity, with modern mingw, modern
   Windows, and with 64-bit Windows.
 
