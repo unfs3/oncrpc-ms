@@ -41,9 +41,6 @@
 
 #ifdef __cplusplus
 extern "C" {
-#define DOTS ...
-#else
-#define DOTS
 #endif
 
 /*
@@ -102,14 +99,14 @@ struct pmap {
 	long unsigned pm_port;
 };
 
-extern bool_t xdr_pmap(DOTS);
+extern bool_t xdr_pmap(XDR *, struct pmap *);
 
 struct pmaplist {
 	struct pmap	pml_map;
 	struct pmaplist *pml_next;
 };
 
-extern bool_t xdr_pmaplist(DOTS);
+extern bool_t xdr_pmaplist(XDR *, struct pmaplist **);
 
 #ifdef __cplusplus
 };

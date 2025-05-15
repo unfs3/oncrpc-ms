@@ -73,7 +73,7 @@ struct rpcdata {
 static void setrpcent(int f);
 static void endrpcent();
 
-static	struct rpcent *interpret();
+static	struct rpcent *interpret(char *, int);
 struct	hostent *gethostent();
 #ifdef WIN32
 #define index(str,ch) strchr(str,ch)

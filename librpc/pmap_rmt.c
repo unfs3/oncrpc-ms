@@ -238,8 +238,6 @@ getbroadcastnets(addrs, sock, buf)
 #endif
 }
 
-typedef bool_t (*resultproc_t)();
-
 enum clnt_stat
 clnt_broadcast(prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
 	u_long		prog;		/* program number */

@@ -71,12 +71,12 @@ static struct clntraw_private {
 	u_int	mcnt;
 } *clntraw_private;
 
-static enum clnt_stat	clntraw_call();
-static void		clntraw_abort();
-static void		clntraw_geterr();
-static bool_t		clntraw_freeres();
-static bool_t		clntraw_control();
-static void		clntraw_destroy();
+static enum clnt_stat	clntraw_call(CLIENT *, u_long, xdrproc_t, caddr_t, xdrproc_t, caddr_t, struct timeval);
+static void		clntraw_abort(CLIENT *);
+static void		clntraw_geterr(CLIENT *, struct rpc_err *);
+static bool_t		clntraw_freeres(CLIENT *, xdrproc_t, caddr_t);
+static bool_t		clntraw_control(CLIENT *, u_int, caddr_t);
+static void		clntraw_destroy(CLIENT *);
 
 static struct clnt_ops client_ops = {
 	clntraw_call,
@@ -86,8 +86,6 @@ static struct clnt_ops client_ops = {
 	clntraw_destroy,
 	clntraw_control
 };
-
-void	svc_getreq();
 
 /*
  * Create a client handle for memory based rpc.
@@ -211,7 +209,7 @@ call_again:
 }
 
 static void
-clntraw_geterr()
+clntraw_geterr(CLIENT *, struct rpc_err *)
 {
 }
 
@@ -236,17 +234,17 @@ clntraw_freeres(cl, xdr_res, res_ptr)
 }
 
 static void
-clntraw_abort()
+clntraw_abort(CLIENT *)
 {
 }
 
 static bool_t
-clntraw_control()
+clntraw_control(CLIENT *, u_int, caddr_t)
 {
 	return (FALSE);
 }
 
 static void
-clntraw_destroy()
+clntraw_destroy(CLIENT *)
 {
 }
