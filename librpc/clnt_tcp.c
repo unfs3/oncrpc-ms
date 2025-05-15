@@ -84,15 +84,15 @@ static char sccsid[] = "@(#)clnt_tcp.c 1.37 87/10/05 Copyr 1984 Sun Micro";
 extern int errno;
 #endif
 
-static int	readtcp();
-static int	writetcp();
+static int	readtcp(caddr_t, caddr_t, int);
+static int	writetcp(caddr_t, caddr_t, int);
 
-static enum clnt_stat	clnttcp_call();
-static void		clnttcp_abort();
-static void		clnttcp_geterr();
-static bool_t		clnttcp_freeres();
-static bool_t           clnttcp_control();
-static void		clnttcp_destroy();
+static enum clnt_stat	clnttcp_call(CLIENT *, u_long, xdrproc_t, caddr_t, xdrproc_t, caddr_t, struct timeval);
+static void		clnttcp_abort(CLIENT *);
+static void		clnttcp_geterr(CLIENT *, struct rpc_err *);
+static bool_t		clnttcp_freeres(CLIENT *, xdrproc_t, caddr_t);
+static bool_t		clnttcp_control(CLIENT *, int, caddr_t);
+static void		clnttcp_destroy(CLIENT *);
 
 static struct clnt_ops tcp_ops = {
 	clnttcp_call,
@@ -399,7 +399,8 @@ clnttcp_freeres(cl, xdr_res, res_ptr)
 }
 
 static void
-clnttcp_abort()
+clnttcp_abort(cl)
+	CLIENT *cl;
 {
 }
 
@@ -454,11 +455,12 @@ clnttcp_destroy(h)
  * around for the rpc level.
  */
 static int
-readtcp(ct, buf, len)
-	register struct ct_data *ct;
+readtcp(ctp, buf, len)
+	caddr_t ctp;
 	caddr_t buf;
 	register int len;
 {
+	register struct ct_data *ct = (struct ct_data *)ctp;
 #ifdef FD_SETSIZE
 	fd_set mask;
 	fd_set readfds;
@@ -543,12 +545,13 @@ readtcp(ct, buf, len)
 }
 
 static int
-writetcp(ct, buf, len)
-	struct ct_data *ct;
+writetcp(ctp, buf, len)
+	caddr_t ctp;
 	caddr_t buf;
 	int len;
 {
 	register int i, cnt;
+	struct ct_data *ct = (struct ct_data *) ctp;
 
 	for (cnt = len; cnt > 0; cnt -= i, buf += i) {
 #ifdef WIN32

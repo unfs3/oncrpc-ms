@@ -57,13 +57,7 @@ static char sccsid[] = "@(#)clnt_perror.c 1.15 87/10/07 Copyr 1984 Sun Micro";
 #include <rpc/auth.h>
 #include <rpc/clnt.h>
 
-#ifndef WIN32
-extern char *sys_errlist[];
-extern char *sprintf();
-#endif
-static char *auth_errmsg();
-
-extern char *strcpy();
+static char *auth_errmsg(enum auth_stat);
 
 static char *buf;
 
@@ -85,7 +79,7 @@ clnt_sperror(rpch, s)
 	char *s;
 {
 	struct rpc_err e;
-	void clnt_perrno();
+	void clnt_perrno(enum clnt_stat);
 	char *err;
 	char *str = _buf();
 	char *strstart = str;

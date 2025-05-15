@@ -58,7 +58,7 @@ static char sccsid[] = "@(#)pmap_clnt.c 1.37 87/08/11 Copyr 1984 Sun Micro";
 static struct timeval timeout = { 5, 0 };
 static struct timeval tottimeout = { 60, 0 };
 
-void clnt_perror();
+void clnt_perror(CLIENT *, char *);
 
 
 /*

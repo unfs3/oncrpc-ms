@@ -41,9 +41,6 @@
 
 #ifdef __cplusplus
 extern "C" {
-#define DOTS ...
-#else
-#define DOTS
 #endif
 
 /*
@@ -59,7 +56,7 @@ struct rmtcallargs {
 	xdrproc_t xdr_args;
 };
 
-bool_t xdr_rmtcall_args(DOTS);
+bool_t xdr_rmtcall_args(XDR *, struct rmtcallargs *);
 
 struct rmtcallres {
 	u_long *port_ptr;
@@ -68,7 +65,7 @@ struct rmtcallres {
 	xdrproc_t xdr_results;
 };
 
-bool_t xdr_rmtcallres(DOTS);
+bool_t xdr_rmtcallres(XDR *, struct rmtcallres *);
 #ifdef __cplusplus
 };
 #endif

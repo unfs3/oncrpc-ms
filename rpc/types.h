@@ -83,6 +83,7 @@ typedef char *caddr_t;
 typedef unsigned int u_int;
 typedef unsigned long u_long;
 typedef unsigned short u_short;
+typedef unsigned char u_char;
 
 typedef u_long rpcprog_t;
 typedef u_long rpcvers_t;

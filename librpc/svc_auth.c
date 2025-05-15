@@ -65,12 +65,12 @@ static char sccsid[] = "@(#)svc_auth.c	2.1 88/08/07 4.0 RPCSRC; from 1.19 87/08/
  *
  */
 
-enum auth_stat _svcauth_null();		/* no authentication */
-enum auth_stat _svcauth_unix();		/* unix style (uid, gids) */
-enum auth_stat _svcauth_short();	/* short hand unix style */
+enum auth_stat _svcauth_null(struct svc_req *, struct rpc_msg *);		/* no authentication */
+enum auth_stat _svcauth_unix(struct svc_req *, struct rpc_msg *);		/* unix style (uid, gids) */
+enum auth_stat _svcauth_short(struct svc_req *, struct rpc_msg *);	/* short hand unix style */
 
 static struct {
-	enum auth_stat (*authenticator)();
+	enum auth_stat (*authenticator)(struct svc_req *, struct rpc_msg *);
 } svcauthsw[] = {
 	_svcauth_null,			/* AUTH_NULL */
 	_svcauth_unix,			/* AUTH_UNIX */
@@ -116,9 +116,9 @@ _authenticate(rqst, msg)
 }
 
 enum auth_stat
-_svcauth_null(/*rqst, msg*/)
-	/*struct svc_req *rqst;
-	struct rpc_msg *msg;*/
+_svcauth_null(rqst, msg)
+	register struct svc_req *rqst;
+	struct rpc_msg *msg;
 {
 
 	return (AUTH_OK);

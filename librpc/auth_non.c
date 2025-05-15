@@ -61,11 +61,11 @@ static char sccsid[] = "@(#)auth_none.c 1.19 87/08/11 Copyr 1984 Sun Micro";
 /*
  * Authenticator operations routines
  */
-static void	authnone_verf();
-static void	authnone_destroy();
-static bool_t	authnone_marshal();
-static bool_t	authnone_validate();
-static bool_t	authnone_refresh();
+static void	authnone_verf(AUTH *);
+static void	authnone_destroy(AUTH *);
+static bool_t	authnone_marshal(AUTH *, XDR *);
+static bool_t	authnone_validate(AUTH *, struct opaque_auth *);
+static bool_t	authnone_refresh(AUTH *);
 
 static struct auth_ops ops = {
 	authnone_verf,
@@ -123,25 +123,30 @@ authnone_marshal(client, xdrs)
 }
 
 static void 
-authnone_verf()
+authnone_verf(client)
+	AUTH *client;
 {
 }
 
 static bool_t
-authnone_validate()
+authnone_validate(client, verf)
+	AUTH *client;
+	struct opaque_auth *verf;
 {
 
 	return (TRUE);
 }
 
 static bool_t
-authnone_refresh()
+authnone_refresh(client)
+	AUTH *client;
 {
 
 	return (FALSE);
 }
 
 static void
-authnone_destroy()
+authnone_destroy(client)
+	AUTH *client;
 {
 }

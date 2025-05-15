@@ -72,12 +72,12 @@ extern errno;
 /*
  * Ops vector for TCP/IP based rpc service handle
  */
-static bool_t		svctcp_recv();
-static enum xprt_stat	svctcp_stat();
-static bool_t		svctcp_getargs();
-static bool_t		svctcp_reply();
-static bool_t		svctcp_freeargs();
-static void		svctcp_destroy();
+static bool_t		svctcp_recv(SVCXPRT *, struct rpc_msg *);
+static enum xprt_stat	svctcp_stat(SVCXPRT *);
+static bool_t		svctcp_getargs(SVCXPRT *, xdrproc_t, caddr_t);
+static bool_t		svctcp_reply(SVCXPRT *, struct rpc_msg *);
+static bool_t		svctcp_freeargs(SVCXPRT *, xdrproc_t, caddr_t);
+static void		svctcp_destroy(SVCXPRT *);
 
 static struct xp_ops svctcp_op = {
 	svctcp_recv,
@@ -91,26 +91,23 @@ static struct xp_ops svctcp_op = {
 /*
  * Ops vector for TCP/IP rendezvous handler
  */
-static bool_t		rendezvous_request();
-static enum xprt_stat	rendezvous_stat();
+static bool_t		rendezvous_request(SVCXPRT *, struct rpc_msg *);
+static enum xprt_stat	rendezvous_stat(SVCXPRT *);
+static bool_t		rendezvous_getargs(SVCXPRT *, xdrproc_t, caddr_t);
+static bool_t		rendezvous_reply(SVCXPRT *, struct rpc_msg *);
+static bool_t		rendezvous_freeargs(SVCXPRT *, xdrproc_t, caddr_t);
 
 static struct xp_ops svctcp_rendezvous_op = {
 	rendezvous_request,
 	rendezvous_stat,
-#ifdef WIN32
-	xabort,
-	xabort,
-	xabort,
-#else
-	abort,
-	abort,
-	abort,
-#endif
+	rendezvous_getargs,
+	rendezvous_reply,
+	rendezvous_freeargs,
 	svctcp_destroy
 };
 
-static int readtcp(), writetcp();
-static SVCXPRT *makefd_xprt();
+static int readtcp(caddr_t, caddr_t, int), writetcp(caddr_t, caddr_t, int);
+static SVCXPRT *makefd_xprt(int, u_int, u_int);
 
 struct tcp_rendezvous { /* kept in xprt->xp_p1 */
 	u_int sendsize;
@@ -340,10 +337,49 @@ rendezvous_request(xprt, msg)
 }
 
 static enum xprt_stat
-rendezvous_stat()
+rendezvous_stat(xprt)
+	SVCXPRT *xprt;
 {
 
 	return (XPRT_IDLE);
+}
+
+static bool_t
+rendezvous_getargs(xprt, xdr_args, args_ptr)
+	SVCXPRT *xprt;
+	xdrproc_t xdr_args;
+	caddr_t args_ptr;
+{
+#ifdef WIN32
+	xabort();
+#else
+	abort();
+#endif
+}
+
+static bool_t
+rendezvous_reply(xprt, msg)
+	SVCXPRT *xprt;
+	register struct rpc_msg *msg;
+{
+#ifdef WIN32
+	xabort();
+#else
+	abort();
+#endif
+}
+
+static bool_t
+rendezvous_freeargs(xprt, xdr_args, args_ptr)
+	SVCXPRT *xprt;
+	xdrproc_t xdr_args;
+	caddr_t args_ptr;
+{
+#ifdef WIN32
+	xabort();
+#else
+	abort();
+#endif
 }
 
 static void
@@ -383,11 +419,12 @@ static struct timeval wait_per_try = { 35, 0 };
  * (And a read of zero bytes is a half closed stream => error.)
  */
 static int
-readtcp(xprt, buf, len)
-	register SVCXPRT *xprt;
+readtcp(xprtp, buf, len)
+	caddr_t xprtp;
 	caddr_t buf;
 	register int len;
 {
+	register SVCXPRT *xprt = (SVCXPRT *)xprtp;
 	register int sock = xprt->xp_fd;
 #ifdef FD_SETSIZE
 	fd_set mask;
@@ -438,11 +475,12 @@ fatal_err:
  * Any error is fatal and the connection is closed.
  */
 static int
-writetcp(xprt, buf, len)
-	register SVCXPRT *xprt;
+writetcp(xprtp, buf, len)
+	caddr_t xprtp;
 	caddr_t buf;
 	int len;
 {
+	register SVCXPRT *xprt = (SVCXPRT *)xprtp;
 	register int i, cnt;
 
 	for (cnt = len; cnt > 0; cnt -= i, buf += i) {
