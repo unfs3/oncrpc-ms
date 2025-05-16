@@ -474,7 +474,7 @@ xdr_opaque(xdrs, cp, cnt)
 		}
 		if (rndup == 0)
 			return (TRUE);
-		return (XDR_GETBYTES(xdrs, crud, rndup));
+		return (XDR_GETBYTES(xdrs, (caddr_t)crud, rndup));
 	}
 
 	if (xdrs->x_op == XDR_ENCODE) {

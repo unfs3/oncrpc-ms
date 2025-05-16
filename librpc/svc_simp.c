@@ -140,7 +140,7 @@ universal(rqstp, transp)
 	 * enforce "procnum 0 is echo" convention
 	 */
 	if (rqstp->rq_proc == NULLPROC) {
-		if (svc_sendreply(transp, xdr_void, (char *)NULL) == FALSE) {
+		if (svc_sendreply(transp, (xdrproc_t)xdr_void, (char *)NULL) == FALSE) {
 #ifdef WIN32
 			nt_rpc_report(stderr, "xxx\n");
 #else
