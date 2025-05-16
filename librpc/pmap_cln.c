@@ -87,7 +87,9 @@ pmap_set(program, version, protocol, port)
 	parms.pm_vers = version;
 	parms.pm_prot = protocol;
 	parms.pm_port = port;
-	if (CLNT_CALL(client, PMAPPROC_SET, xdr_pmap, &parms, xdr_bool, &rslt,
+	if (CLNT_CALL(client, PMAPPROC_SET,
+	    (xdrproc_t)xdr_pmap, (caddr_t)&parms,
+	    (xdrproc_t)xdr_bool, (caddr_t)&rslt,
 	    tottimeout) != RPC_SUCCESS) {
 		clnt_perror(client, "Cannot register service");
 		return (FALSE);
@@ -124,8 +126,9 @@ pmap_unset(program, version)
 	parms.pm_prog = program;
 	parms.pm_vers = version;
 	parms.pm_port = parms.pm_prot = 0;
-	CLNT_CALL(client, PMAPPROC_UNSET, xdr_pmap, &parms, xdr_bool, &rslt,
-	    tottimeout);
+	CLNT_CALL(client, PMAPPROC_UNSET,
+	    (xdrproc_t)xdr_pmap, (caddr_t)&parms,
+	    (xdrproc_t)xdr_bool, (caddr_t)&rslt, tottimeout);
 	CLNT_DESTROY(client);
 #ifdef WIN32
 	(void)closesocket(socket);
