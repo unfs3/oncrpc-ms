@@ -19,17 +19,14 @@
 
 #ifdef __cplusplus
 extern "C" {
-#define DOTS ...
-#else
-#define DOTS
 #endif
 
 struct netconfig {
 	int protocol;
 };
 
-extern struct netconfig *getnetconfigent (DOTS);
-extern void freenetconfigent (DOTS);
+extern struct netconfig *getnetconfigent (const char *);
+extern void freenetconfigent (struct netconfig *);
 
 #ifdef __cplusplus
 };

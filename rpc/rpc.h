@@ -59,17 +59,13 @@
 
 #ifdef __cplusplus
 extern "C" {
-#define DOTS ...
-#else
-#define DOTS
 #endif
 
 extern int rpc_nt_init(void);
 extern int rpc_nt_exit(void);
-extern void nt_rpc_report(DOTS);
+extern void nt_rpc_report(LPTSTR);
 
 #include <rpc/bcopy.h>
-extern int xdr_opaque_auth(DOTS);
 
 #ifdef __cplusplus
 };

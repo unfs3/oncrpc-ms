@@ -51,8 +51,9 @@
  * Server side authenticator
  */
 #ifdef __cplusplus
-extern "C" auth_stat _authenticate(...);
-#else
-extern enum auth_stat _authenticate();
+extern "C" {
 #endif
-
+extern enum auth_stat _authenticate(struct svc_req *, struct rpc_msg *);
+#ifdef __cplusplus
+}
+#endif

@@ -48,9 +48,6 @@
 
 #ifdef __cplusplus
 extern "C" {
-#define DOTS ...
-#else
-#define DOTS
 #endif
 
 /*
@@ -75,12 +72,14 @@ extern "C" {
  *		address if the responder to the broadcast.
  */
 
-extern bool_t		pmap_set(DOTS);
-extern bool_t		pmap_unset(DOTS);
-extern struct pmaplist	*pmap_getmaps(DOTS);
-enum clnt_stat		pmap_rmtcall(DOTS);
-enum clnt_stat		clnt_broadcast(DOTS);
-extern u_short		pmap_getport(DOTS);
+typedef bool_t (*resultproc_t)(caddr_t, struct sockaddr_in *);
+
+extern bool_t		pmap_set(u_long, u_long, int, int);
+extern bool_t		pmap_unset(u_long, u_long);
+extern struct pmaplist	*pmap_getmaps(struct  sockaddr_in *);
+enum clnt_stat		pmap_rmtcall(struct sockaddr_in *, u_long, u_long, u_long, xdrproc_t, caddr_t, xdrproc_t, caddr_t, struct timeval, u_long *);
+enum clnt_stat		clnt_broadcast(u_long, u_long, u_long, xdrproc_t, caddr_t, xdrproc_t, caddr_t, resultproc_t);
+extern u_short		pmap_getport(struct sockaddr_in *, u_long, u_long, u_int);
 
 #ifdef __cplusplus
 };

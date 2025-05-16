@@ -62,8 +62,8 @@ static char sccsid[] = "@(#)clnt_generic.c 1.4 87/08/11 (C) 1987 SMI";
 CLIENT *
 clnt_create(hostname, prog, vers, proto)
 	char *hostname;
-	unsigned prog;
-	unsigned vers;
+	u_long prog;
+	u_long vers;
 	char *proto;
 {
 	struct hostent *h;
@@ -114,7 +114,7 @@ clnt_create(hostname, prog, vers, proto)
 			return (NULL);
 		}
 		tv.tv_sec = 25;
-		clnt_control(client, CLSET_TIMEOUT, &tv);
+		clnt_control(client, CLSET_TIMEOUT, (caddr_t)&tv);
 		break;
 	case IPPROTO_TCP:
 		client = clnttcp_create(&sin, prog, vers, &sock, 0, 0);
@@ -123,7 +123,7 @@ clnt_create(hostname, prog, vers, proto)
 		}
 		tv.tv_sec = 25;
 		tv.tv_usec = 0;
-		clnt_control(client, CLSET_TIMEOUT, &tv);
+		clnt_control(client, CLSET_TIMEOUT, (caddr_t)&tv);
 		break;
 	default:
 		rpc_createerr.cf_stat = RPC_SYSTEMERROR;

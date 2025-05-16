@@ -71,11 +71,11 @@ static char sccsid[] = "@(#)auth_unix.c 1.19 87/08/11 Copyr 1984 Sun Micro";
 /*
  * Unix authenticator operations vector
  */
-static void	authunix_nextverf();
-static bool_t	authunix_marshal();
-static bool_t	authunix_validate();
-static bool_t	authunix_refresh();
-static void	authunix_destroy();
+static void	authunix_nextverf(AUTH *);
+static bool_t	authunix_marshal(AUTH *, XDR *);
+static bool_t	authunix_validate(AUTH *, struct opaque_auth *);
+static bool_t	authunix_refresh(AUTH *);
+static void	authunix_destroy(AUTH *);
 
 static struct auth_ops auth_unix_ops = {
 	authunix_nextverf,
@@ -97,7 +97,7 @@ struct audata {
 };
 #define	AUTH_PRIVATE(auth)	((struct audata *)auth->ah_private)
 
-static bool_t marshal_new_auth();
+static bool_t marshal_new_auth(AUTH *);
 
 
 /*

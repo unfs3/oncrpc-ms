@@ -87,10 +87,10 @@ static struct svc_callout {
 	struct svc_callout *sc_next;
 	u_long		    sc_prog;
 	u_long		    sc_vers;
-	void		    (*sc_dispatch)();
+	void		    (*sc_dispatch)(struct svc_req *, SVCXPRT *);
 } *svc_head;
 
-static struct svc_callout *svc_find();
+static struct svc_callout *svc_find(u_long, u_long, struct svc_callout **);
 
 /* ***************  SVCXPRT related stuff **************** */
 
@@ -185,7 +185,7 @@ svc_register(xprt, prog, vers, dispatch, protocol)
 	SVCXPRT *xprt;
 	u_long prog;
 	u_long vers;
-	void (*dispatch)();
+	void (*dispatch)(struct svc_req *, SVCXPRT *);
 	int protocol;
 {
 	struct svc_callout *prev;
@@ -218,7 +218,7 @@ svc_reg(xprt, prog, vers, dispatch, nconf)
 	SVCXPRT *xprt;
 	rpcprog_t prog;
 	rpcvers_t vers;
-	void (*dispatch)();
+	void (*dispatch)(struct svc_req *, SVCXPRT *);
 	struct netconfig *nconf;
 {
 	return svc_register(xprt, prog, vers, dispatch,

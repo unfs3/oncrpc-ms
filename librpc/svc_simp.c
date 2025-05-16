@@ -58,20 +58,20 @@ static char sccsid[] = "@(#)svc_simple.c 1.18 87/08/11 Copyr 1984 Sun Micro";
 #endif
 
 static struct proglst {
-	char *(*p_progname)();
+	char *(*p_progname)(char *);
 	int  p_prognum;
 	int  p_procnum;
 	xdrproc_t p_inproc, p_outproc;
 	struct proglst *p_nxt;
 } *proglst;
-static void universal();
+static void universal(struct svc_req *, SVCXPRT *);
 static SVCXPRT *transp;
 struct proglst *pl;
 
 int
 registerrpc(prognum, versnum, procnum, progname, inproc, outproc)
 	int prognum, versnum, procnum;
-	char *(*progname)();
+	char *(*progname)(char *);
 	xdrproc_t inproc, outproc;
 {
 
@@ -140,9 +140,9 @@ universal(rqstp, transp)
 	 * enforce "procnum 0 is echo" convention
 	 */
 	if (rqstp->rq_proc == NULLPROC) {
-		if (svc_sendreply(transp, xdr_void, (char *)NULL) == FALSE) {
+		if (svc_sendreply(transp, (xdrproc_t)xdr_void, (char *)NULL) == FALSE) {
 #ifdef WIN32
-			nt_rpc_report(stderr, "xxx\n");
+			nt_rpc_report("xxx\n");
 #else
 			(void) fprintf(stderr, "xxx\n");
 #endif
