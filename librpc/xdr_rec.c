@@ -72,16 +72,16 @@ static char sccsid[] = "@(#)xdr_rec.c 1.21 87/08/11 Copyr 1984 Sun Micro";
 extern long	lseek();
 #endif
 
-static u_int	fix_buf_size();
+static u_int	fix_buf_size(u_int);
 
-static bool_t	xdrrec_getlong();
-static bool_t	xdrrec_putlong();
-static bool_t	xdrrec_getbytes();
-static bool_t	xdrrec_putbytes();
-static u_int	xdrrec_getpos();
-static bool_t	xdrrec_setpos();
-static long *	xdrrec_inline();
-static void	xdrrec_destroy();
+static bool_t	xdrrec_getlong(XDR *, long *);
+static bool_t	xdrrec_putlong(XDR *, long *);
+static bool_t	xdrrec_getbytes(XDR *, caddr_t, u_int);
+static bool_t	xdrrec_putbytes(XDR *, caddr_t, u_int);
+static u_int	xdrrec_getpos(XDR *);
+static bool_t	xdrrec_setpos(XDR *, u_int);
+static long *	xdrrec_inline(XDR *, u_int);
+static void	xdrrec_destroy(XDR *);
 
 static struct  xdr_ops xdrrec_ops = {
 	xdrrec_getlong,
@@ -115,7 +115,7 @@ typedef struct rec_strm {
 	/*
 	 * out-goung bits
 	 */
-	int (*writeit)();
+	int (*writeit)(caddr_t, caddr_t, int);
 	caddr_t out_base;	/* output buffer (points to frag header) */
 	caddr_t out_finger;	/* next output position */
 	caddr_t out_boundry;	/* data cannot up to this address */
@@ -124,7 +124,7 @@ typedef struct rec_strm {
 	/*
 	 * in-coming bits
 	 */
-	int (*readit)();
+	int (*readit)(caddr_t, caddr_t, int);
 	u_long in_size;	/* fixed size of the input buffer */
 	caddr_t in_base;
 	caddr_t in_finger;	/* location of next byte to be had */
@@ -157,8 +157,8 @@ xdrrec_create(xdrs, sendsize, recvsize, tcp_handle, readit, writeit)
 	register u_int sendsize;
 	register u_int recvsize;
 	caddr_t tcp_handle;
-	int (*readit)();  /* like read, but pass it a tcp_handle, not sock */
-	int (*writeit)();  /* like write, but pass it a tcp_handle, not sock */
+	int (*readit)(caddr_t, caddr_t, int);  /* like read, but pass it a tcp_handle, not sock */
+	int (*writeit)(caddr_t, caddr_t, int);  /* like write, but pass it a tcp_handle, not sock */
 {
 	register RECSTREAM *rstrm =
 		(RECSTREAM *)mem_alloc(sizeof(RECSTREAM));
@@ -384,7 +384,7 @@ xdrrec_setpos(xdrs, pos)
 static long *
 xdrrec_inline(xdrs, len)
 	register XDR *xdrs;
-	int len;
+	u_int len;
 {
 	register RECSTREAM *rstrm = (RECSTREAM *)xdrs->x_private;
 	long * buf = NULL;

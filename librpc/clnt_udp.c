@@ -71,12 +71,12 @@ extern int errno;
 /*
  * UDP bases client side rpc operations
  */
-static enum clnt_stat	clntudp_call();
-static void		clntudp_abort();
-static void		clntudp_geterr();
-static bool_t		clntudp_freeres();
-static bool_t           clntudp_control();
-static void		clntudp_destroy();
+static enum clnt_stat	clntudp_call(CLIENT *, u_long, xdrproc_t, caddr_t, xdrproc_t, caddr_t, struct timeval);
+static void		clntudp_abort(CLIENT *);
+static void		clntudp_geterr(CLIENT *, struct rpc_err *);
+static bool_t		clntudp_freeres(CLIENT *, xdrproc_t, caddr_t);
+static bool_t		clntudp_control(CLIENT *, int, caddr_t);
+static void		clntudp_destroy(CLIENT *);
 
 static struct clnt_ops udp_ops = {
 	clntudp_call,
@@ -459,8 +459,8 @@ clntudp_freeres(cl, xdr_res, res_ptr)
 }
 
 static void
-clntudp_abort(/*h*/)
-	/*CLIENT *h;*/
+clntudp_abort(cl)
+	CLIENT *cl;
 {
 }
 

@@ -54,9 +54,6 @@
 
 #ifdef __cplusplus
 extern "C" {
-#define DOTS ...
-#else
-#define DOTS
 #endif
 
 #define MAX_AUTH_BYTES	400
@@ -102,7 +99,7 @@ union des_block {
 };
 #endif
 typedef union des_block des_block;
-extern bool_t xdr_des_block(DOTS);
+extern bool_t xdr_des_block(XDR *, des_block *);
 
 /*
  * Authentication info.  Opaque to client.
@@ -117,16 +114,16 @@ struct opaque_auth {
 /*
  * Auth handle, interface to client side authenticators.
  */
-typedef struct {
+typedef struct __auth {
 	struct	opaque_auth	ah_cred;
 	struct	opaque_auth	ah_verf;
 	union	des_block	ah_key;
 	struct auth_ops {
-		void	(*ah_nextverf)(DOTS);
-		int	(*ah_marshal)(DOTS);	/* nextverf & serialize */
-		int	(*ah_validate)(DOTS);	/* validate varifier */
-		int	(*ah_refresh)(DOTS);	/* refresh credentials */
-		void	(*ah_destroy)(DOTS);	/* destroy this structure */
+		void	(*ah_nextverf)(struct __auth *);
+		int	(*ah_marshal)(struct __auth *, XDR *);	/* nextverf & serialize */
+		int	(*ah_validate)(struct __auth *, struct opaque_auth *);	/* validate varifier */
+		int	(*ah_refresh)(struct __auth *);	/* refresh credentials */
+		void	(*ah_destroy)(struct __auth *);	/* destroy this structure */
 	} *ah_ops;
 	caddr_t ah_private;
 } AUTH;
@@ -179,6 +176,7 @@ __declspec(dllimport) struct opaque_auth _null_auth;
 extern struct opaque_auth _null_auth;
 #endif
 
+extern int xdr_opaque_auth(XDR *, struct opaque_auth *);
 
 /*
  * These are the various implementations of client side authenticators.
@@ -193,10 +191,10 @@ extern struct opaque_auth _null_auth;
  *	int len;
  *	int *aup_gids;
  */
-extern AUTH *authunix_create(DOTS);
-extern AUTH *authunix_create_default(DOTS);	/* takes no parameters */
-extern AUTH *authnone_create(DOTS);		/* takes no parameters */
-extern AUTH *authdes_create(DOTS);
+extern AUTH *authunix_create(char *, int, int, int, int *);
+extern AUTH *authunix_create_default(void);
+extern AUTH *authnone_create(void);
+extern AUTH *authdes_create(char *, u_int, struct sockaddr *, des_block *);
 
 #define AUTH_NONE	0		/* no authentication */
 #define	AUTH_NULL	0		/* backward compatibility */

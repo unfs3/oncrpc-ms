@@ -58,9 +58,6 @@
 
 #ifdef __cplusplus
 extern "C" {
-#define DOTS ...
-#else
-#define DOTS
 #endif
 
 /* The machine name is part of a credential; it may not exceed 255 bytes */
@@ -81,7 +78,7 @@ struct authunix_parms {
 	int	*aup_gids;
 };
 
-extern bool_t xdr_authunix_parms(DOTS);
+extern bool_t xdr_authunix_parms(XDR *, struct authunix_parms *);
 
 /* 
  * If a response verifier has flavor AUTH_SHORT, 

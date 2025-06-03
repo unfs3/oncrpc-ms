@@ -63,14 +63,14 @@ static char sccsid[] = "@(#)xdr_mem.c 1.19 87/08/11 Copyr 1984 Sun Micro";
 #include <netinet/in.h>
 #endif
 
-static bool_t	xdrmem_getlong();
-static bool_t	xdrmem_putlong();
-static bool_t	xdrmem_getbytes();
-static bool_t	xdrmem_putbytes();
-static u_int	xdrmem_getpos();
-static bool_t	xdrmem_setpos();
-static long *	xdrmem_inline();
-static void	xdrmem_destroy();
+static bool_t	xdrmem_getlong(XDR *, long *);
+static bool_t	xdrmem_putlong(XDR *, long *);
+static bool_t	xdrmem_getbytes(XDR *, caddr_t, u_int);
+static bool_t	xdrmem_putbytes(XDR *, caddr_t, u_int);
+static u_int	xdrmem_getpos(XDR *);
+static bool_t	xdrmem_setpos(XDR *, u_int);
+static long *	xdrmem_inline(XDR *, u_int);
+static void	xdrmem_destroy(XDR *);
 
 static struct	xdr_ops xdrmem_ops = {
 	xdrmem_getlong,
@@ -102,8 +102,8 @@ xdrmem_create(xdrs, addr, size, op)
 }
 
 static void
-xdrmem_destroy(/*xdrs*/)
-	/*XDR *xdrs;*/
+xdrmem_destroy(xdrs)
+	XDR *xdrs;
 {
 }
 
@@ -187,7 +187,7 @@ xdrmem_setpos(xdrs, pos)
 static long *
 xdrmem_inline(xdrs, len)
 	register XDR *xdrs;
-	int len;
+	u_int len;
 {
 	long *buf = 0;
 

@@ -109,8 +109,9 @@ pmap_rmtcall(addr, prog, vers, proc, xdrargs, argsp, xdrres, resp, tout, port_pt
 		r.port_ptr = port_ptr;
 		r.results_ptr = resp;
 		r.xdr_results = xdrres;
-		stat = CLNT_CALL(client, PMAPPROC_CALLIT, xdr_rmtcall_args, &a,
-		    xdr_rmtcallres, &r, tout);
+		stat = CLNT_CALL(client, PMAPPROC_CALLIT,
+		    (xdrproc_t)xdr_rmtcall_args, (caddr_t)&a,
+		    (xdrproc_t)xdr_rmtcallres, (caddr_t)&r, tout);
 		CLNT_DESTROY(client);
 	} else {
 		stat = RPC_FAILED;
@@ -169,7 +170,7 @@ xdr_rmtcallres(xdrs, crp)
 
 	port_ptr = (caddr_t)crp->port_ptr;
 	if (xdr_reference(xdrs, &port_ptr, sizeof (u_long),
-	    xdr_u_long) && xdr_u_long(xdrs, &crp->resultslen)) {
+	    (xdrproc_t)xdr_u_long) && xdr_u_long(xdrs, &crp->resultslen)) {
 		crp->port_ptr = (u_long *)port_ptr;
 		return ((*(crp->xdr_results))(xdrs, crp->results_ptr));
 	}
@@ -236,8 +237,6 @@ getbroadcastnets(addrs, sock, buf)
 	return (i);
 #endif
 }
-
-typedef bool_t (*resultproc_t)();
 
 enum clnt_stat
 clnt_broadcast(prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
@@ -355,7 +354,7 @@ clnt_broadcast(prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
 	recv_again:
 		msg.acpted_rply.ar_verf = _null_auth;
 		msg.acpted_rply.ar_results.where = (caddr_t)&r;
-                msg.acpted_rply.ar_results.proc = xdr_rmtcallres;
+		msg.acpted_rply.ar_results.proc = (xdrproc_t)xdr_rmtcallres;
 		readfds = mask;
 #ifdef WIN32
 		switch (select(0 /* unused in winsock */, &readfds, NULL,
@@ -422,7 +421,7 @@ clnt_broadcast(prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
 #endif
 		}
 		xdrs->x_op = XDR_FREE;
-		msg.acpted_rply.ar_results.proc = xdr_void;
+		msg.acpted_rply.ar_results.proc = (xdrproc_t) xdr_void;
 		(void)xdr_replymsg(xdrs, &msg);
 		(void)(*xresults)(xdrs, resultsp);
 		xdr_destroy(xdrs);

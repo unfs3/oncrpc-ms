@@ -62,12 +62,12 @@ static char sccsid[] = "@(#)svc_udp.c 1.24 87/08/11 Copyr 1984 Sun Micro";
 #define rpc_buffer(xprt) ((xprt)->xp_p1)
 #define MAX(a, b)     ((a > b) ? a : b)
 
-static bool_t		svcudp_recv();
-static bool_t		svcudp_reply();
-static enum xprt_stat	svcudp_stat();
-static bool_t		svcudp_getargs();
-static bool_t		svcudp_freeargs();
-static void		svcudp_destroy();
+static bool_t		svcudp_recv(SVCXPRT *, struct rpc_msg *);
+static bool_t		svcudp_reply(SVCXPRT *, struct rpc_msg *);
+static enum xprt_stat	svcudp_stat(SVCXPRT *);
+static bool_t		svcudp_getargs(SVCXPRT *, xdrproc_t, caddr_t);
+static bool_t		svcudp_freeargs(SVCXPRT *, xdrproc_t, caddr_t);
+static void		svcudp_destroy(SVCXPRT *);
 
 static struct xp_ops svcudp_op = {
 	svcudp_recv,

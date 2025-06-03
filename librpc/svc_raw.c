@@ -64,12 +64,12 @@ static struct svcraw_private {
 	char	verf_body[MAX_AUTH_BYTES];
 } *svcraw_private;
 
-static bool_t		svcraw_recv();
-static enum xprt_stat 	svcraw_stat();
-static bool_t		svcraw_getargs();
-static bool_t		svcraw_reply();
-static bool_t		svcraw_freeargs();
-static void		svcraw_destroy();
+static bool_t		svcraw_recv(SVCXPRT *, struct rpc_msg *);
+static enum xprt_stat 	svcraw_stat(SVCXPRT *);
+static bool_t		svcraw_getargs(SVCXPRT *, xdrproc_t, caddr_t);
+static bool_t		svcraw_reply(SVCXPRT *, struct rpc_msg *);
+static bool_t		svcraw_freeargs(SVCXPRT *, xdrproc_t, caddr_t);
+static void		svcraw_destroy(SVCXPRT *);
 
 static struct xp_ops server_ops = {
 	svcraw_recv,
@@ -99,7 +99,8 @@ svcraw_create()
 }
 
 static enum xprt_stat
-svcraw_stat()
+svcraw_stat(xprt)
+	SVCXPRT *xprt;
 {
 
 	return (XPRT_IDLE);
@@ -172,6 +173,7 @@ svcraw_freeargs(xprt, xdr_args, args_ptr)
 } 
 
 static void
-svcraw_destroy()
+svcraw_destroy(xprt)
+	SVCXPRT *xprt;
 {
 }

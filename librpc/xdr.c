@@ -267,7 +267,7 @@ xdr_char(xdrs, cp)
 bool_t
 xdr_u_char(xdrs, cp)
 	XDR *xdrs;
-	char *cp;
+	u_char *cp;
 {
 	u_int u;
 
@@ -297,7 +297,7 @@ xdr_int32_t(xdrs, i32p)
 bool_t
 xdr_uint32_t(xdrs, u32p)
 	register XDR *xdrs;
-	int32_t *u32p;
+	uint32_t *u32p;
 {
 	assert(sizeof(uint32_t) == sizeof(u_int));
 	return (xdr_u_int(xdrs, (u_int *)u32p));
@@ -474,7 +474,7 @@ xdr_opaque(xdrs, cp, cnt)
 		}
 		if (rndup == 0)
 			return (TRUE);
-		return (XDR_GETBYTES(xdrs, crud, rndup));
+		return (XDR_GETBYTES(xdrs, (caddr_t)crud, rndup));
 	}
 
 	if (xdrs->x_op == XDR_ENCODE) {

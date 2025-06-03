@@ -50,9 +50,6 @@
 
 #ifdef __cplusplus
 extern "C" {
-#define DOTS ...
-#else
-#define DOTS
 #endif
 
 /*
@@ -128,15 +125,15 @@ struct rpc_err {
  * Created by individual implementations, see e.g. rpc_udp.c.
  * Client is responsible for initializing auth, see e.g. auth_none.c.
  */
-typedef struct {
+typedef struct __rpc_client {
 	AUTH	*cl_auth;			/* authenticator */
 	struct clnt_ops {
-		enum clnt_stat	(*cl_call)(DOTS);	/* call remote procedure */
-		void		(*cl_abort)(DOTS);	/* abort a call */
-		void		(*cl_geterr)(DOTS);	/* get specific error code */
-		bool_t		(*cl_freeres)(DOTS); /* frees results */
-		void		(*cl_destroy)(DOTS);/* destroy this structure */
-		bool_t          (*cl_control)(DOTS);/* the ioctl() of rpc */
+		enum clnt_stat	(*cl_call)(struct __rpc_client *, u_long, xdrproc_t, caddr_t, xdrproc_t, caddr_t, struct timeval);	/* call remote procedure */
+		void		(*cl_abort)(struct __rpc_client *);	/* abort a call */
+		void		(*cl_geterr)(struct __rpc_client *, struct rpc_err *);	/* get specific error code */
+		bool_t		(*cl_freeres)(struct __rpc_client *, xdrproc_t, caddr_t); /* frees results */
+		void		(*cl_destroy)(struct __rpc_client *);/* destroy this structure */
+		bool_t          (*cl_control)(struct __rpc_client *, int, caddr_t);/* the ioctl() of rpc */
 	} *cl_ops;
 	caddr_t			cl_private;	/* private stuff */
 } CLIENT;
@@ -253,14 +250,14 @@ typedef struct {
  *	u_long prog;
  *	u_long vers;
  */
-extern CLIENT *clntraw_create(DOTS);
+extern CLIENT *clntraw_create(u_long, u_long);
 
 
 /*
  * Generic client creation routine. Supported protocols are "udp" and "tcp"
  */
 extern CLIENT *
-clnt_create(/*host, prog, vers, prot*/DOTS); /*
+clnt_create(char *, u_long, u_long, char *); /*
 	char *host; 	-- hostname
 	u_long prog;	-- program number
 	u_long vers;	-- version number
@@ -281,7 +278,7 @@ clnt_create(/*host, prog, vers, prot*/DOTS); /*
  *	u_int sendsz;
  *	u_int recvsz;
  */
-extern CLIENT *clnttcp_create(DOTS);
+extern CLIENT *clnttcp_create(struct sockaddr_in *, u_long, u_long, int *, u_int, u_int);
 
 /*
  * UDP based rpc.
@@ -304,25 +301,25 @@ extern CLIENT *clnttcp_create(DOTS);
  *	u_int sendsz;
  *	u_int recvsz;
  */
-extern CLIENT *clntudp_create(DOTS);
-extern CLIENT *clntudp_bufcreate(DOTS);
+extern CLIENT *clntudp_create(struct sockaddr_in *, u_long, u_long, struct timeval, int *);
+extern CLIENT *clntudp_bufcreate(struct sockaddr_in *, u_long, u_long, struct timeval, int *, u_int, u_int);
 
 /*
  * Print why creation failed
  */
-void clnt_pcreateerror(/* char *msg */DOTS);	/* stderr */
-char *clnt_spcreateerror(/* char *msg */DOTS);	/* string */
+void clnt_pcreateerror(char *msg);	/* stderr */
+char *clnt_spcreateerror(char *msg);	/* string */
 
 /*
  * Like clnt_perror(), but is more verbose in its output
  */ 
-void clnt_perrno(/* enum clnt_stat num */DOTS);	/* stderr */
+void clnt_perrno(enum clnt_stat num);	/* stderr */
 
 /*
  * Print an English error message, given the client error code
  */
-void clnt_perror(/* CLIENT *clnt, char *msg */DOTS); 	/* stderr */
-char *clnt_sperror(/* CLIENT *clnt, char *msg */DOTS);	/* string */
+void clnt_perror(CLIENT *clnt, char *msg); 	/* stderr */
+char *clnt_sperror(CLIENT *clnt, char *msg);	/* string */
 
 /* 
  * If a creation fails, the following allows the user to figure out why.
@@ -350,7 +347,7 @@ extern struct rpc_createerr rpc_createerr;
 /*
  * Copy error message to buffer.
  */
-char *clnt_sperrno(/* enum clnt_stat num */DOTS);	/* string */
+char *clnt_sperrno(enum clnt_stat num);	/* string */
 
 
 
