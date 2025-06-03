@@ -298,8 +298,9 @@ makefd_xprt(fd, sendsize, recvsize)
 }
 
 static bool_t
-rendezvous_request(xprt)
+rendezvous_request(xprt, msg)
 	register SVCXPRT *xprt;
+	register struct rpc_msg *msg;
 {
 	int sock;
 	struct tcp_rendezvous *r;
