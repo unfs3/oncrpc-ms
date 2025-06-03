@@ -187,7 +187,7 @@ xdrmem_setpos(xdrs, pos)
 static long *
 xdrmem_inline(xdrs, len)
 	register XDR *xdrs;
-	int len;
+	u_int len;
 {
 	long *buf = 0;
 

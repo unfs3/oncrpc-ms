@@ -384,7 +384,7 @@ xdrrec_setpos(xdrs, pos)
 static long *
 xdrrec_inline(xdrs, len)
 	register XDR *xdrs;
-	int len;
+	u_int len;
 {
 	register RECSTREAM *rstrm = (RECSTREAM *)xdrs->x_private;
 	long * buf = NULL;
